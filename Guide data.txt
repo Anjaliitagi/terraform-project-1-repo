@@ -1,0 +1,117 @@
+Terraform AWS Project – Step-by-Step Guide for CI/CD Demo
+1️⃣ Project Structure
+Create a folder named terraform-project-1 and organize it as:
+
+terraform-project-1/
+├── .gitignore                # Ignore sensitive files (terraform.tfvars)
+├── backend.tf                # S3 backend configuration
+├── provider.tf               # AWS provider details
+├── variables.tf              # Variable declarations
+├── terraform.tfvars          # Variable values (local, not in Git)
+├── main.tf                   # Terraform resources (VPC, Subnet, EC2, SG, S3)
+├── outputs.tf                # Terraform outputs (EC2 IP, S3 bucket)
+├── Jenkinsfile               # CI/CD pipeline
+├── README.md                 # Project documentation
+
+2️⃣ Files & Their Purpose
+File	Purpose
+.gitignore - Ignore sensitive files (terraform.tfvars)
+backend.tf - S3 backend configuration for Terraform state
+provider.tf - AWS provider and region settings
+variables.tf - Define input variables (AMI, instance type, etc.)
+terraform.tfvars - Actual values for variables (never commit sensitive info)
+main.tf	Define AWS resources: VPC, Subnet, Security Group, EC2, S3, Random ID
+outputs.tf ,Capture outputs: EC2 public IP, S3 bucket name
+Jenkinsfile - Automate Terraform workflow in Jenkins
+README.md - Documentation
+
+3️⃣ AWS Setup
+Create IAM User
+Programmatic access
+Attach AdministratorAccess policy (or least privilege required)
+Save Access Key ID and Secret Access Key
+Configure AWS CLI
+aws configure
+AWS Access Key ID
+
+AWS Secret Access Key
+Default region: us-east-1
+Output format: json (optional)
+
+Store credentials in Jenkins
+Go to Manage Jenkins → Manage Credentials
+Add a new AWS credential entry
+ID example: awscredentials
+
+4️⃣ Terraform Workflow
+
+Initialize Terraform
+    powershell
+    terraform init -reconfigure
+Plan Infrastructure
+    terraform plan
+Apply Infrastructure
+    terraform apply -auto-approve
+View Outputs
+    terraform output
+
+    Destroy Resources
+    terraform destroy -auto-approve
+⚠️ Always destroy resources after demo to avoid AWS charges (especially on free tier)
+
+5️⃣ Jenkins CI/CD Pipeline
+Jenkinsfile Example
+
+Stages:
+Checkout code from GitHub
+Terraform Init
+Terraform Plan
+Terraform Apply
+Show Outputs
+
+Plugins Required:
+Pipeline
+AWS Credentials
+Git
+Terraform
+
+AWS Credential Usage:
+Use withCredentials block to securely pass AWS credentials to Terraform
+
+6️⃣ Git Workflow
+Initialize Git repo
+    git init
+
+Add .gitignore for terraform.tfvars
+Commit and push
+
+git add .
+git commit -m "Initial commit"
+git push origin main
+✅ Keep sensitive data out of Git using .gitignore
+
+7️⃣ Key Points for Interview / Demo
+
+Backend configured to S3 for remote state
+Variables separated from code (terraform.tfvars) to prevent hardcoding
+Outputs for EC2 public IP and S3 bucket name
+Pipeline fully automated using Jenkinsfile
+
+AWS credentials handled securely in Jenkins
+Terraform lifecycle: init → plan → apply → destroy
+Use random_id to ensure unique S3 bucket names
+
+Free tier considerations: destroy resources after demo
+
+8️⃣ Steps to Run Next Time / Interview Demo
+Clone GitHub repo:
+
+git clone https://github.com/Anjaliitagi/terraform-project-1-repo.git
+cd terraform-project-1-repo
+Add your terraform.tfvars with correct values.
+
+Run Terraform via CLI or Jenkins pipeline.
+
+Verify outputs (EC2 IP, S3 bucket).
+
+Destroy infrastructure after demo.

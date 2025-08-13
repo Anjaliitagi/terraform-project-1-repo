@@ -22,4 +22,3 @@ The pipeline is triggered whenever code is pushed to GitHub, ensuring that infra
 - **Git** – Code management
 ---
 
-## 📂 Project Structure
