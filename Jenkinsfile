@@ -18,7 +18,7 @@ pipeline {
                 echo "Initializing Terraform..."
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
+                    credentialsId: 'awscredentialss'
                 ]]) {
                     bat 'terraform init'
                 }
@@ -30,7 +30,7 @@ pipeline {
                 echo "Creating Terraform execution plan..."
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
+                    credentialsId: 'awscredentialss'
                 ]]) {
                     bat 'terraform plan -out=tfplan'
                 }
@@ -45,7 +45,7 @@ pipeline {
                 echo "Applying Terraform changes..."
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
+                    credentialsId: 'awscredentialss'
                 ]]) {
                     bat 'terraform apply -auto-approve'
                 }
@@ -57,7 +57,7 @@ pipeline {
                 echo "Displaying Terraform outputs..."
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
+                    credentialsId: 'awscredentials'
                 ]]) {
                     bat 'terraform output'
                 }
