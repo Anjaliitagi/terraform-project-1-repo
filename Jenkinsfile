@@ -2,9 +2,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('awscredentials')   // Jenkins credentials ID for AWS Access Key
-        AWS_SECRET_ACCESS_KEY = credentials('awscredentials')   // Jenkins credentials ID for AWS Secret Key
-        AWS_DEFAULT_REGION    = "us-east-1"
+        AWS_DEFAULT_REGION = "us-east-1"  // Keep your AWS region here
     }
 
     stages {
@@ -18,14 +16,24 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 echo "Initializing Terraform..."
-                bat 'terraform init'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    bat 'terraform init'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
                 echo "Creating Terraform execution plan..."
-                bat 'terraform plan -out=tfplan'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    bat 'terraform plan -out=tfplan'
+                }
             }
         }
 
@@ -35,14 +43,24 @@ pipeline {
                     input message: 'Approve deployment?', ok: 'Deploy'
                 }
                 echo "Applying Terraform changes..."
-                bat 'terraform apply -auto-approve'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    bat 'terraform apply -auto-approve'
+                }
             }
         }
 
-        stage('batow Outputs') {
+        stage('Show Outputs') {
             steps {
                 echo "Displaying Terraform outputs..."
-                bat 'terraform output'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    bat 'terraform output'
+                }
             }
         }
     }
