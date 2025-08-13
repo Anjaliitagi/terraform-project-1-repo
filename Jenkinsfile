@@ -18,14 +18,14 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 echo "Initializing Terraform..."
-                sh 'terraform init'
+                bat 'terraform init'
             }
         }
 
         stage('Terraform Plan') {
             steps {
                 echo "Creating Terraform execution plan..."
-                sh 'terraform plan -out=tfplan'
+                bat 'terraform plan -out=tfplan'
             }
         }
 
@@ -35,14 +35,14 @@ pipeline {
                     input message: 'Approve deployment?', ok: 'Deploy'
                 }
                 echo "Applying Terraform changes..."
-                sh 'terraform apply -auto-approve'
+                bat 'terraform apply -auto-approve'
             }
         }
 
-        stage('Show Outputs') {
+        stage('batow Outputs') {
             steps {
                 echo "Displaying Terraform outputs..."
-                sh 'terraform output'
+                bat 'terraform output'
             }
         }
     }
